@@ -1,4 +1,4 @@
-package com.rafael.demoapi;
+package com.rafael.demoapi.treco;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
