@@ -20,12 +20,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Usuario {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp date;
-	
 	@Column(nullable = false)
 	private long id;
 	

@@ -13,47 +13,59 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RestController
 @RequestMapping("/trecos")
 public class TrecoController {
-	
+
 	@Autowired
-	private TrecoRepository trecoRepository;
-	
+	private TrecoRepository repository;
+
 	@GetMapping
-	public List<Treco> getAll(){
-		return trecoRepository.findAll();
+	public List<Treco> getAll() {
+		return repository.findAll();
 	}
 	
-	@GetMapping("/{id}")
-	public Treco getOne(@PathVariable Long id) {
-		if(trecoRepository.existsById(id)) {
-			return trecoRepository.findById(id).get();
+	@GetMapping(path = "/{id}", produces = "application/json")
+	public String getOne(@PathVariable Long id) {
+
+		if (repository.existsById(id)) {
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				Treco treco = repository.findById(id).get();
+				return mapper.writeValueAsString(treco);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
-		return null;	
+		return "{ \"status\" : \"not found\" }";
+
 	}
-	 
+
+	@PostMapping
+	public Treco post(@RequestBody Treco treco) {
+		return repository.save(treco);
+	}
+
 	@DeleteMapping(path = "/{id}", produces = "application/json")
 	public String delete(@PathVariable Long id) {
-		if(trecoRepository.existsById(id)){
-			trecoRepository.deleteById(id);
-			return "{\"status\" : \"deleted\" }";
+		if (repository.existsById(id)) {
+			repository.deleteById(id);
+			return "{ \"status\" : \"deleted\" }";
 		}
-		return "{\"status\" : \"error\" }";
+		return "{ \"status\" : \"error\" }";
 	}
-	
+
 	@PutMapping(path = "/{id}")
 	public Treco put(@PathVariable Long id, @RequestBody Treco treco) {
 		return null;
 	}
-	
+
 	@PatchMapping(path = "/{id}")
 	public Treco patch(@PathVariable Long id, @RequestBody Treco treco) {
 		return null;
 	}
-	
-	@PostMapping
-	public Treco post(@RequestBody Treco treco) {
-		return trecoRepository.save(treco);
-}
+
 }
