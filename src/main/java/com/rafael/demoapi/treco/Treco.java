@@ -1,6 +1,7 @@
 package com.rafael.demoapi.treco;
 
-import java.security.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +18,7 @@ public class Treco {
 	private Long id;
 
 	@Column(length = 63)
-	private String date;
+	private String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 	@Column(length = 63)
 	private String name;
@@ -61,7 +62,7 @@ public class Treco {
 	}
 
 	public String getStatus() {
-		return status;
+		return status = "on";
 	}
 
 	public void setStatus(String status) {
